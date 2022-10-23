@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:musicplayer/nowplaying.dart';
-import 'package:musicplayer/provider/song_provider.dart';
+import 'package:musicplayer/pages/nowplaying.dart';
+import 'package:musicplayer/pages/song_provider.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
 
