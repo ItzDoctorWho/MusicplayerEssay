@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:musicplayer/pages/allsongs.dart';
 import 'package:musicplayer/pages/favorites.dart';
 import 'package:musicplayer/pages/playlists.dart';
-import 'package:musicplayer/search.dart';
+import 'package:musicplayer/pages/search.dart';
 
 class Navbar extends StatefulWidget {
   const Navbar({Key? key}) : super(key: key);
