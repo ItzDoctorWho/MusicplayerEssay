@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 
 class Favorites extends StatelessWidget {
+  const Favorites({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Favorites'),
+        title: const Text('Favorites'),
       ),
-      body: Center(
+      body: const Center(
         child: Text('Favorites'),
       ),
     );

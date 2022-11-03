@@ -2,14 +2,17 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:musicplayer/pages/song_provider.dart';
+import 'package:just_audio_background/just_audio_background.dart';
+import 'package:musicplayer/provider/song_provider.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
+import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 
 class NowPlaying extends StatefulWidget {
-  const NowPlaying({Key? key, required this.song, required this.audioPlayer})
+  const NowPlaying(
+      {Key? key, required this.songList, required this.audioPlayer})
       : super(key: key);
-  final SongModel song;
+  final List<SongModel> songList;
   final AudioPlayer audioPlayer;
   @override
   State<NowPlaying> createState() => _NowPlayingState();
@@ -20,6 +23,9 @@ class _NowPlayingState extends State<NowPlaying> {
   Duration position = Duration.zero;
   Duration duration = Duration.zero;
 
+  List<AudioSource> songs = [];
+  int currentIndex = 0;
+
   @override
   void initState() {
     super.initState();
@@ -28,11 +34,24 @@ class _NowPlayingState extends State<NowPlaying> {
 
   playsong() {
     try {
+      for (var element in widget.songList) {
+        songs.add(AudioSource.uri(
+          Uri.parse(element.uri!),
+          tag: MediaItem(
+              id: element.id.toString(),
+              album: element.album ?? "No Album",
+              title: element.title,
+              artist: element.artist ?? "No Artist",
+              artUri: Uri.parse(element.id.toString())),
+        ));
+      }
+
       widget.audioPlayer.setAudioSource(
-        AudioSource.uri(
-          Uri.parse(widget.song.uri!),
+        ConcatenatingAudioSource(
+          children: songs,
         ),
       );
+
       widget.audioPlayer.play();
       isPlaying = true;
     } catch (e) {
@@ -52,6 +71,24 @@ class _NowPlayingState extends State<NowPlaying> {
         });
       },
     );
+    listenToSongIndex();
+  }
+
+  void listenToSongIndex() {
+    widget.audioPlayer.currentIndexStream.listen(
+      (event) {
+        setState(
+          () {
+            if (event != null) {
+              currentIndex = event;
+            }
+            context
+                .read<SongProvider>()
+                .setId(widget.songList[currentIndex].id);
+          },
+        );
+      },
+    );
   }
 
   void siderchange(int seconds) {
@@ -62,41 +99,93 @@ class _NowPlayingState extends State<NowPlaying> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xffccdad1),
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 10),
+          child: IconButton(
+              onPressed: () => Navigator.pop(context),
+              icon: const Icon(
+                Icons.keyboard_arrow_down,
+                size: 30,
+                color: Colors.white,
+              )),
+        ),
+      ),
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(
-              height: 10,
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.05,
             ),
-            Row(
+            Stack(
               children: [
-                const SizedBox(
-                  width: 10,
-                ),
-                IconButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  icon: const Icon(
-                    Icons.arrow_back_ios,
-                    size: 35,
+                Center(
+                  child: SleekCircularSlider(
+                    initialValue: position.inSeconds.toDouble(),
+                    onChange: (value) {
+                      siderchange(value.toInt());
+                    },
+                    min: 0,
+                    max: duration.inSeconds.toDouble(),
+                    innerWidget: (percentage) {
+                      return const Padding(
+                        padding: EdgeInsets.all(25.0),
+                        child: Artwork(),
+                      );
+                    },
+                    appearance: CircularSliderAppearance(
+                        counterClockwise: false,
+                        size: 330,
+                        customColors: CustomSliderColors(
+                            progressBarColor:
+                                const Color.fromARGB(255, 106, 106, 106),
+                            dotColor: Colors.black,
+                            trackColor: Colors.grey.withOpacity(.4)),
+                        customWidths: CustomSliderWidths(
+                            trackWidth: 6,
+                            handlerSize: 10,
+                            progressBarWidth: 6)),
                   ),
                 ),
+                Positioned(
+                  left: 40,
+                  top: 270,
+                  child: Text(
+                    position.toString().split(".")[0].split(":")[0] == "0"
+                        ? "${position.toString().split(".")[0].split(":")[1]}:${position.toString().split(".")[0].split(":")[2]}"
+                        : position.toString().split(".")[0],
+                    style: const TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Positioned(
+                  right: 40,
+                  top: 270,
+                  child: Text(
+                    duration.toString().split(".")[0].split(":")[0] == "0"
+                        ? "${duration.toString().split(".")[0].split(":")[1]}:${duration.toString().split(".")[0].split(":")[2]}"
+                        : duration.toString().split(".")[0],
+                    style: const TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                )
               ],
-            ),
-            const SizedBox(
-              height: 30,
-            ),
-            const Center(
-              child: Artwork(),
             ),
             Container(
               padding: const EdgeInsets.all(20),
               child: Column(
                 children: [
                   Text(
-                    widget.song.title,
+                    widget.songList[currentIndex].title,
+                    textAlign: TextAlign.center,
+                    maxLines: 2,
                     style: const TextStyle(
                         fontSize: 20, fontWeight: FontWeight.bold),
                   ),
@@ -104,7 +193,7 @@ class _NowPlayingState extends State<NowPlaying> {
                     height: 10,
                   ),
                   Text(
-                    widget.song.artist.toString(),
+                    widget.songList[currentIndex].artist.toString(),
                     style: const TextStyle(fontSize: 15, color: Colors.grey),
                   ),
                   const SizedBox(
@@ -114,12 +203,16 @@ class _NowPlayingState extends State<NowPlaying> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      const IconButton(
-                        icon: Icon(
+                      IconButton(
+                        onPressed: () {
+                          if (widget.audioPlayer.hasPrevious) {
+                            widget.audioPlayer.seekToPrevious();
+                          }
+                        },
+                        icon: const Icon(
                           Icons.skip_previous,
                         ),
                         iconSize: 40,
-                        onPressed: null,
                       ),
                       const SizedBox(
                         width: 20,
@@ -143,34 +236,21 @@ class _NowPlayingState extends State<NowPlaying> {
                       const SizedBox(
                         width: 20,
                       ),
-                      const IconButton(
-                        icon: Icon(
+                      IconButton(
+                        onPressed: () {
+                          if (widget.audioPlayer.hasNext) {
+                            widget.audioPlayer.seekToNext();
+                          }
+                        },
+                        icon: const Icon(
                           Icons.skip_next,
                         ),
                         iconSize: 40,
-                        onPressed: null,
                       ),
                     ],
                   ),
                   const SizedBox(
                     height: 20,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(position.toString().split(".")[0]),
-                      Text(duration.toString().split(".")[0]),
-                    ],
-                  ),
-                  Slider(
-                    value: position.inSeconds.toDouble(),
-                    onChanged: (value) {
-                      siderchange(value.toInt());
-                    },
-                    min: 0,
-                    max: duration.inSeconds.toDouble(),
-                    activeColor: Colors.black,
-                    inactiveColor: Colors.grey,
                   ),
                   const SizedBox(
                     height: 20,
@@ -223,14 +303,14 @@ class Artwork extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 300,
-      width: 300,
+      height: 250,
+      width: 250,
       child: QueryArtworkWidget(
-        size: 500,
+        size: 250,
         id: context.watch<SongProvider>().id,
         type: ArtworkType.AUDIO,
         artworkFit: BoxFit.cover,
-        artworkBorder: const BorderRadius.all(Radius.circular(20)),
+        artworkBorder: const BorderRadius.all(Radius.circular(200)),
         nullArtworkWidget: const Icon(
           Icons.music_note,
           size: 300,

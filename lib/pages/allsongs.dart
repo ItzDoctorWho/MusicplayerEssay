@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:musicplayer/pages/nowplaying.dart';
-import 'package:musicplayer/pages/song_provider.dart';
+import 'package:musicplayer/provider/song_provider.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
 
@@ -16,6 +16,8 @@ class AllSongs extends StatefulWidget {
 class _AllSongsState extends State<AllSongs> {
   final OnAudioQuery _audioQuery = OnAudioQuery();
   final AudioPlayer _audioPlayer = AudioPlayer();
+  List<SongModel> allSongs = [];
+
   @override
   void initState() {
     super.initState();
@@ -38,6 +40,22 @@ class _AllSongsState extends State<AllSongs> {
       appBar: AppBar(
         title: const Text('All Songs'),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => NowPlaying(
+                songList: allSongs,
+                audioPlayer: _audioPlayer,
+              ),
+            ),
+          );
+        },
+        child: const Icon(
+          Icons.play_arrow,
+        ),
+      ),
       body: FutureBuilder<List<SongModel>>(
         future: _audioQuery.querySongs(
           sortType: null,
@@ -46,6 +64,7 @@ class _AllSongsState extends State<AllSongs> {
           ignoreCase: true,
         ),
         builder: (context, item) {
+          allSongs.addAll(item.data!);
           if (item.data == null) {
             return const Center(child: CircularProgressIndicator());
           }
@@ -71,7 +90,7 @@ class _AllSongsState extends State<AllSongs> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => NowPlaying(
-                        song: item.data![index],
+                        songList: allSongs.sublist(index),
                         audioPlayer: _audioPlayer,
                       ),
                     ),

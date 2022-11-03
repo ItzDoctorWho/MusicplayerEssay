@@ -14,10 +14,10 @@ class Navbar extends StatefulWidget {
 class _NavbarState extends State<Navbar> {
   int _selectedIndex = 0;
   final List<Widget> _widgetOptions = <Widget>[
-    AllSongs(),
-    Search(),
-    Favorites(),
-    Playlists(),
+    const AllSongs(),
+    const Search(),
+    const Favorites(),
+    const Playlists(),
   ];
 
   void _onItemTap(int index) {
@@ -48,11 +48,11 @@ class _NavbarState extends State<Navbar> {
         ),
         height: 80,
         child: BottomNavigationBar(
-          backgroundColor: Color(0xff185a9d),
+          backgroundColor: const Color(0xff185a9d),
           unselectedItemColor: Colors.black,
           selectedIconTheme: const IconThemeData(color: Color(0xff43cea2)),
-          selectedItemColor: Color.fromARGB(255, 14, 67, 50),
-          selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
+          selectedItemColor: const Color.fromARGB(255, 14, 67, 50),
+          selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               icon: Icon(Icons.music_note),
