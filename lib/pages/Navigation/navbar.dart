@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:musicplayer/pages/allsongs.dart';
-import 'package:musicplayer/pages/favorites.dart';
-import 'package:musicplayer/pages/playlists.dart';
-import 'package:musicplayer/pages/search.dart';
+import 'package:musicplayer/pages/Navigation/favorites.dart';
+import 'package:musicplayer/pages/Navigation/playlists.dart';
+import 'package:musicplayer/pages/Tabs/artists.dart';
+import 'package:musicplayer/pages/Tabs/tabs.dart';
 
 class Navbar extends StatefulWidget {
   const Navbar({Key? key}) : super(key: key);
@@ -14,8 +14,10 @@ class Navbar extends StatefulWidget {
 class _NavbarState extends State<Navbar> {
   int _selectedIndex = 0;
   final List<Widget> _widgetOptions = <Widget>[
-    const AllSongs(),
-    const Search(),
+    const TabNav(),
+    const Center(
+      child: Text("Search"),
+    ),
     const Favorites(),
     const Playlists(),
   ];

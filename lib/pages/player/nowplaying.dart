@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:musicplayer/provider/song_provider.dart';
+import 'package:musicplayer/widgets/artwork.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
@@ -153,14 +154,19 @@ class _NowPlayingState extends State<NowPlaying> {
                 Positioned(
                   left: 40,
                   top: 270,
-                  child: Text(
-                    position.toString().split(".")[0].split(":")[0] == "0"
-                        ? "${position.toString().split(".")[0].split(":")[1]}:${position.toString().split(".")[0].split(":")[2]}"
-                        : position.toString().split(".")[0],
-                    style: const TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.bold,
+                  child: GestureDetector(
+                    child: Text(
+                      position.toString().split(".")[0].split(":")[0] == "0"
+                          ? "${position.toString().split(".")[0].split(":")[1]}:${position.toString().split(".")[0].split(":")[2]}"
+                          : position.toString().split(".")[0],
+                      style: const TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
+                    onTap: () {
+                      
+                    },
                   ),
                 ),
                 Positioned(
@@ -289,31 +295,6 @@ class _NowPlayingState extends State<NowPlaying> {
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class Artwork extends StatelessWidget {
-  const Artwork({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 250,
-      width: 250,
-      child: QueryArtworkWidget(
-        size: 250,
-        id: context.watch<SongProvider>().id,
-        type: ArtworkType.AUDIO,
-        artworkFit: BoxFit.cover,
-        artworkBorder: const BorderRadius.all(Radius.circular(200)),
-        nullArtworkWidget: const Icon(
-          Icons.music_note,
-          size: 300,
         ),
       ),
     );

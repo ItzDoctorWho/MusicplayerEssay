@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:musicplayer/pages/nowplaying.dart';
+import 'package:musicplayer/pages/player/nowplaying.dart';
 import 'package:musicplayer/provider/song_provider.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
@@ -37,10 +37,8 @@ class _AllSongsState extends State<AllSongs> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('All Songs'),
-      ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.black,
         onPressed: () {
           Navigator.push(
             context,
