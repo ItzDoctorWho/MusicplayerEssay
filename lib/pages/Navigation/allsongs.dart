@@ -17,6 +17,7 @@ class _AllSongsState extends State<AllSongs> {
   final OnAudioQuery _audioQuery = OnAudioQuery();
   final AudioPlayer _audioPlayer = AudioPlayer();
   List<SongModel> allSongs = [];
+  List<SongModel> songslist = [];
 
   @override
   void initState() {
@@ -32,6 +33,16 @@ class _AllSongsState extends State<AllSongs> {
       }
       setState(() {});
     }
+  }
+
+  Future<List<SongModel>> fetchSongs(List<SongModel> songlist) async {
+    songlist = await _audioQuery.querySongs(
+      sortType: null,
+      orderType: OrderType.ASC_OR_SMALLER,
+      uriType: UriType.EXTERNAL,
+      ignoreCase: true,
+    );
+    return songlist;
   }
 
   @override
@@ -55,12 +66,7 @@ class _AllSongsState extends State<AllSongs> {
         ),
       ),
       body: FutureBuilder<List<SongModel>>(
-        future: _audioQuery.querySongs(
-          sortType: null,
-          orderType: OrderType.ASC_OR_SMALLER,
-          uriType: UriType.EXTERNAL,
-          ignoreCase: true,
-        ),
+        future: fetchSongs(songslist),
         builder: (context, item) {
           allSongs.addAll(item.data!);
           if (item.data == null) {
