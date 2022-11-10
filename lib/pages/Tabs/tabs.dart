@@ -35,9 +35,9 @@ class _TabNavState extends State<TabNav> {
               ],
             ),
           ),
-          body: TabBarView(
+          body: const TabBarView(
             children: [
-              const AllSongs(),
+              AllSongs(),
               AlbumsList(),
               Artists(),
             ],

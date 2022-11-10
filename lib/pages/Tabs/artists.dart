@@ -3,7 +3,7 @@ import 'package:musicplayer/pages/Tabs/artistsongs.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
 class Artists extends StatelessWidget {
-  Artists({Key? key}) : super(key: key);
+  const Artists({Key? key}) : super(key: key);
 
   Future<List<Object>> _fetchArtists() {
     var artistsList = OnAudioQuery().queryArtists();

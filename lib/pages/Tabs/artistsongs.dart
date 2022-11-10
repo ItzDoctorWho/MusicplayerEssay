@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:musicplayer/pages/player/nowplaying.dart';
 import 'package:musicplayer/provider/song_provider.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
 
+// ignore: must_be_immutable
 class ArtistsSongs extends StatelessWidget {
   ArtistsSongs({Key? key, required this.title}) : super(key: key);
   final String title;
@@ -14,12 +14,12 @@ class ArtistsSongs extends StatelessWidget {
   List<SongModel> allSongs = [];
 
   Future<List<SongModel>> _fetchArtistsSongs() async {
-    List<dynamic> ArtistsSongs = await _audioQuery.queryWithFilters(
+    List<dynamic> artistsSongs = await _audioQuery.queryWithFilters(
       title,
       WithFiltersType.AUDIOS,
       args: AudiosArgs.ARTIST,
     );
-    List<SongModel> convertedSongs = ArtistsSongs.toSongModel();
+    List<SongModel> convertedSongs = artistsSongs.toSongModel();
     return convertedSongs;
   }
 

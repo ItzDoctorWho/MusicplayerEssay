@@ -5,6 +5,7 @@ import 'package:musicplayer/provider/song_provider.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
 
+// ignore: must_be_immutable
 class AlbumSongs extends StatelessWidget {
   AlbumSongs({Key? key, required this.title}) : super(key: key);
   final String title;

@@ -100,9 +100,9 @@ class _NowPlayingState extends State<NowPlaying> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 231, 231, 231),
+      backgroundColor: const Color.fromARGB(255, 231, 231, 231),
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(213, 0, 0, 0),
+        backgroundColor: const Color.fromARGB(213, 0, 0, 0),
         leading: Padding(
           padding: const EdgeInsets.only(left: 10),
           child: IconButton(

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:musicplayer/pages/Navigation/favorites.dart';
 import 'package:musicplayer/pages/Navigation/playlists.dart';
-import 'package:musicplayer/pages/Tabs/artists.dart';
 import 'package:musicplayer/pages/Tabs/tabs.dart';
 
 class Navbar extends StatefulWidget {
